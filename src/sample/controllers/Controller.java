@@ -86,9 +86,6 @@ public class Controller {
                 img1.setLayoutY(40);
                 img1.setFitHeight(imageHandler.gethImg());
                 img1.setFitWidth(imageHandler.getwImg());
-
-                //img2.setX(panelka.getWidth());
-                //img2.setY(0);
             }
         });
 
@@ -107,7 +104,6 @@ public class Controller {
                 }
             }
         });
-
 
         mirrorImageItem.setOnAction(e -> {
             if (img1 == null) {
@@ -181,7 +177,6 @@ public class Controller {
             if (checkImageClick((int) e.getX(), (int) e.getY(), 0, img2)) {
                 pressedImage = true;
 
-                //DEPRECATE
                 r.setX(img2.getLayoutX());
                 r.setY(img2.getLayoutY());
                 r.setWidth(img2.getFitWidth());
@@ -190,7 +185,6 @@ public class Controller {
                     panelka.getChildren().add(r);
                 }
 
-                //
             } else {
                 if (checkImageClick((int) e.getX(), (int) e.getY(), 20, img1)) {
                     pressedBtn = true;
@@ -202,9 +196,6 @@ public class Controller {
                     panelka.getChildren().remove(r);
                 }
             }
-
-
-
         });
 
         panelka.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
