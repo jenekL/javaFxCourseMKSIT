@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="panelka" prefHeight="367.0" prefWidth="632.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.Controller">
+   <children>
+      <MenuBar fx:id="mainMenu" />
+      <ImageView fx:id="img1" fitHeight="150.0" fitWidth="200.0" layoutX="60.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="img2" fitHeight="150.0" fitWidth="200.0" layoutX="348.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</Pane>
