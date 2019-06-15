@@ -4,7 +4,7 @@ import java.io.FileOutputStream;
 
 public class BMPWriter {
 
-    public static void save(int[][] pixels, String filePath) {
+    public static void save(int[][] pixels, int BytesPerPixel, String filePath) {
         try (LittleEndianDataOutput out1 = new LittleEndianDataOutput(new FileOutputStream(filePath))) {
             int height = pixels.length;
             int width = pixels[0].length;
@@ -23,7 +23,7 @@ public class BMPWriter {
             out1.writeInt32(width);                     // Width
             out1.writeInt32(height);                    // Height
             out1.writeInt16(1);                         // Planes
-            out1.writeInt16(24);                        // BitsPerPixel
+            out1.writeInt16(BytesPerPixel * 8);                        // BitsPerPixel
             out1.writeInt32(0);                         // Compression
             out1.writeInt32(imageSize);                 // SizeOfBitmap
             out1.writeInt32(0);  // HorzResolution
@@ -34,13 +34,14 @@ public class BMPWriter {
             // Image data
             byte[] row = new byte[rowSize];
             //for (int y = height - 1; y >= 0; y--) {
-            for (int[] pixel : pixels) {
-                for (int x = 0; x < width; x++) {
-                    //int color = pixels[y][x];
-                    int color = pixel[x];
-                    row[x * 3] = (byte) (color);  // Blue
-                    row[x * 3 + 1] = (byte) (color >>> 8);  // Green
-                    row[x * 3 + 2] = (byte) (color >>> 16);  // Red
+            //for (int[] pixel : pixels) {
+            for (int y = height - 1; y >= 0; y--) {
+                for (int x = 0; x < width * 3; x += 3) {
+                    int color = pixels[y][x/3];
+                    //int color = pixel[x];
+                    row[x] = (byte) (color);  // Blue
+                    row[x + 1] = (byte) (color >>> 8);  // Green
+                    row[x + 2] = (byte) (color >>> 16);  // Red
                 }
                 out1.writeBytes(row);
             }

@@ -13,7 +13,7 @@ public class TGADecoder {
     private static final int UNCOMPRESSED_RGB = 0x2;
     private static final int RLE_RGB = 0xA;
 
-    public static enum ImageType {
+    public enum ImageType {
         RGB, RGBA, INVALID
     }
 

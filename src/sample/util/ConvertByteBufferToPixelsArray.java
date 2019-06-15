@@ -7,7 +7,7 @@ public class ConvertByteBufferToPixelsArray {
         int[][] pixels = new int[H][W];
 
         int k = 0;
-        for (int i = 0; i < H; i++) {
+        for (int i = H - 1; i >= 0; i--) {
             for (int j = 0; j < W; j++) {
 
                 pixels[i][j] = (byteBuffer.get(k) * 65536) //R

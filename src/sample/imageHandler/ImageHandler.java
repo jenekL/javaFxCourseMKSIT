@@ -3,6 +3,7 @@ package sample.imageHandler;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.layout.Pane;
 import sample.bmp.BMPWriter;
+import sample.exceptions.OutOfBorderException;
 import sample.imageFilters.MirrorFilter;
 import sample.tga.TGADecoder;
 import sample.util.ConvertByteBufferToPixelsArray;
@@ -19,6 +20,7 @@ import java.nio.ByteBuffer;
 
 public class ImageHandler {
     private int[][] pixels = null;
+    private int[][] cuttedPixels = null;
     private double zoom = 1;
     private int xImg, yImg, wImg, hImg; // переменные в которых хранятся координаты части картинки которую над показывать.
     private Image image1 = null;
@@ -82,12 +84,14 @@ public class ImageHandler {
     public BufferedImage getCut(int x, int y, int w, int h) {
 
         BufferedImage img1 = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        cuttedPixels = new int[h][w];
         int k, l = 0;
 
-        for (int i = y + h - 1; i >= y; i--) {
+        for (int i = y; i < h + y; i++) {
             k = 0;
             for (int j = x; j < x + w; j++) {
-                img1.setRGB(k++, h - 1 - l, pixels[i][j]);
+                cuttedPixels[l][k] = pixels[i][j];
+                img1.setRGB(k++, l, pixels[i][j]);
             }
             l++;
         }
@@ -95,9 +99,45 @@ public class ImageHandler {
         return img1;
     }
 
-    public void saveFile(String path) {
-        BMPWriter.save(pixels, path);
+    public int[][] convertIntoMatrix(BufferedImage img){
+        int height = img.getHeight();
+        int width = img.getWidth();
 
+        int[][] matrix = new int[height + 1][width + 1];
+
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                matrix[i][j] = img.getRGB(j,i);
+            }
+        }
+        return matrix;
+    }
+
+    public void saveFile(String path) {
+        BMPWriter.save(pixels, tgaDecoder.getBytesPerPixel(), path);
+    }
+
+    public void placeImage(int x, int y, int w, int h){
+        int k, l =0;
+        for (int i = y; i < y + h; i++) {
+            k = 0;
+            for (int j = x; j < x + w; j++) {
+                pixels[i][j] = cuttedPixels[l][k++];
+            }
+            l++;
+        }
+        setPixels(pixels, wImg, hImg);
+    }
+
+    public BufferedImage resize(int zoom){
+
+        wImg *= zoom;
+        hImg *= zoom;
+
+        int[][]newpixels = new int[hImg][wImg];
+
+
+        return (BufferedImage) image1;
     }
 
     public void MirrorFilter() {
@@ -120,7 +160,8 @@ public class ImageHandler {
         image1 = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < hImg; i++) {
             for (int j = 0; j < wImg; j++) {
-                ((BufferedImage) image1).setRGB(j, hImg - 1 - i, pixels[i][j]);
+                //((BufferedImage) image1).setRGB(j, hImg - 1 - i, pixels[i][j]);
+                ((BufferedImage) image1).setRGB(j, i, pixels[i][j]);
             }
         }
         return (BufferedImage) image1;
