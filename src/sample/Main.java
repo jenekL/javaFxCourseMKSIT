@@ -17,10 +17,12 @@ public class Main extends Application {
         primaryStage.show();
         
         system.out.println("starting");
+        
     }
 
 
     public static void main(String[] args) {
         launch(args);
+        system.out.println("start");
     }
 }
