@@ -16,13 +16,13 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
         
-        system.out.println("starting");
+        System.out.println("starting");
         
     }
 
 
     public static void main(String[] args) {
         launch(args);
-        system.out.println("start");
+        System.out.println("start");
     }
 }
