@@ -4,10 +4,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public final class LittleEndianDataOutput implements AutoCloseable {
+public final class ByteDataOutput implements AutoCloseable {
     private DataOutputStream out;
 
-    public LittleEndianDataOutput(OutputStream out) {
+    public ByteDataOutput(OutputStream out) {
         this.out = new DataOutputStream(out);
     }
 

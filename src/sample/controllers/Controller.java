@@ -83,6 +83,7 @@ public class Controller {
         hImg = 0;
         xImg = 0;
         yImg = 0;
+        zoom = 1;
     }
 
     private void setMenus() {
@@ -201,8 +202,6 @@ public class Controller {
                 }
             }
 
-            // imageHandler.placeImage((int)img2.getLayoutX() - marginLeft, (int) img2.getLayoutY() - marginTop
-            //        , wImg, hImg);
             imageHandler.placeImage((int)((x - marginLeft) / zoom), (int)((y - marginTop) / zoom), w, h);
             img1.setImage(SwingFXUtils.toFXImage((BufferedImage) imageHandler.getImage(), null));
         });
@@ -297,10 +296,8 @@ public class Controller {
         });
 
         panelka.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
-            //pressedImage = false;
             panelka.getChildren().remove(rectangle);
 
-            //TODO realise mashtab
             if (pressedBtn) {
                 if ((int) rectangle.getWidth() != 0 && (int) rectangle.getHeight() != 0) {
                     xImg = (int) (rectangle.getX() / zoom);
@@ -316,7 +313,6 @@ public class Controller {
                     } else {
                         hImg = (int) (((img1.getLayoutY() + img1.getFitHeight()) - (int) rectangle.getY()) / zoom);
                     }
-                    //zoom = 1;
 
                     if(image1 != null) {
                         if (!panelka.getChildren().contains(img2)) {
@@ -337,10 +333,7 @@ public class Controller {
                         img2.setImage(SwingFXUtils.toFXImage((BufferedImage) image2, null));
                         setShinyRect();
                     }
-                    //img1.setImage(SwingFXUtils.toFXImage((BufferedImage)imageHandler.getImage(), null));
 
-
-                    //panelka.getChildren().add(r);
                     pressedBtn = false;
                 }
 
@@ -356,9 +349,13 @@ public class Controller {
                     } else {
                         zoom -= ZOOM_STEP;
                     }
+                    if(zoom <= 0){
+                        zoom += ZOOM_STEP;
+                    }
                     if (img1 != null) {
                         zoomlabel.setText("Zoom: " + (int)((zoom / 1) * 100) + "%");
                         //image1 = imageHandler.getImage();
+                        //image1 = imageHandler.resize(zoom);
                         img1.setFitWidth(image1.getWidth(null) * zoom);
                         img1.setFitHeight(image1.getHeight(null) * zoom);
                         //img1.setImage(SwingFXUtils.toFXImage((BufferedImage) image1, null));

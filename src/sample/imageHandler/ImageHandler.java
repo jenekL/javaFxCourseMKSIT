@@ -1,16 +1,11 @@
 package sample.imageHandler;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.layout.Pane;
 import sample.bmp.BMPWriter;
-import sample.exceptions.OutOfBorderException;
 import sample.imageFilters.MirrorFilter;
 import sample.tga.TGADecoder;
 import sample.util.ConvertByteBufferToPixelsArray;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -22,28 +17,12 @@ public class ImageHandler {
     private int[][] pixels = null;
     private int[][] cuttedPixels = null;
     private double zoom = 1;
-    private int xImg, yImg, wImg, hImg; // переменные в которых хранятся координаты части картинки которую над показывать.
+    private int wImg, hImg;
     private Image image1 = null;
     private TGADecoder tgaDecoder;
 
     public ImageHandler() {
 
-    }
-
-    public int getxImg() {
-        return xImg;
-    }
-
-    public void setxImg(int xImg) {
-        this.xImg = xImg;
-    }
-
-    public int getyImg() {
-        return yImg;
-    }
-
-    public void setyImg(int yImg) {
-        this.yImg = yImg;
     }
 
     public int getwImg() {
@@ -129,15 +108,42 @@ public class ImageHandler {
         setPixels(pixels, wImg, hImg);
     }
 
-    public BufferedImage resize(int zoom){
+    public BufferedImage resize(double zoom){
 
-        wImg *= zoom;
-        hImg *= zoom;
+        //                pixels[i][j] = (byteBuffer.get(k) * 65536) //R
+        //                        + (byteBuffer.get(k + 1) * 256) // G
+        //                        + byteBuffer.get(k + 2); // B
 
-        int[][]newpixels = new int[hImg][wImg];
 
+
+        image1 = new BufferedImage((int)(wImg * zoom), (int)(hImg * zoom), BufferedImage.TYPE_INT_RGB);
+
+        for(int y = 1; y < hImg - 1; y++){
+            for(int x = 1; x < wImg - 1; x++){
+                if(zoom > 1) {
+                    ((BufferedImage) image1).setRGB(x, y, getMiddleColor(pixels[y + 1][x], pixels[y - 1][x],
+                            pixels[y][x - 1], pixels[y][x + 1]));
+                    ((BufferedImage) image1).setRGB(x + 1, y, getMiddleColor(pixels[y + 1][x], pixels[y - 1][x],
+                            pixels[y][x - 1], pixels[y][x + 1]));
+                    ((BufferedImage) image1).setRGB(x, y + 1, getMiddleColor(pixels[y + 1][x], pixels[y - 1][x],
+                            pixels[y][x - 1], pixels[y][x + 1]));
+                }
+                else{
+                    ((BufferedImage) image1).setRGB(x, y, getMiddleColor(pixels[y + 1][x], pixels[y - 1][x],
+                            pixels[y][x - 1], pixels[y][x + 1]));
+                }
+            }
+        }
+
+        //wImg *= zoom;
+        //hImg *= zoom;
+        this.zoom = zoom;
 
         return (BufferedImage) image1;
+    }
+
+    private int getMiddleColor(int up, int down, int left, int right){
+        return (up + down + left + right) / 4;
     }
 
     public void MirrorFilter() {
@@ -152,15 +158,12 @@ public class ImageHandler {
         this.pixels = pixels;
 
         zoom = 1;
-        xImg = 0;
-        yImg = 0;
         wImg = W;
         hImg = H;
 
         image1 = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < hImg; i++) {
             for (int j = 0; j < wImg; j++) {
-                //((BufferedImage) image1).setRGB(j, hImg - 1 - i, pixels[i][j]);
                 ((BufferedImage) image1).setRGB(j, i, pixels[i][j]);
             }
         }
@@ -168,10 +171,7 @@ public class ImageHandler {
     }
 
     public Image getImage() {
-        if (image1 != null) {
             return image1;
-        }
-        return null;
     }
 
 

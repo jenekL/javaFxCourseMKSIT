@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="javaFxCourseMKSIT:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/javaFxCourseMKSIT_jar</output-path>
+    <root id="archive" name="javaFxCourseMKSIT.jar">
+      <element id="module-output" name="javaFxCourseMKSIT" />
+    </root>
+  </artifact>
+</component>
